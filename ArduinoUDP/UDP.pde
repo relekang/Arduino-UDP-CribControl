@@ -1,3 +1,11 @@
+/*
+    UDP - CribControl
+    Author: Rolf Erik Lekang
+    
+    Translates UDP strings to digital output to devices controlling my home.
+
+*/
+
 #include <Servo.h>
 #include <SPI.h>         
 #include <Ethernet.h>
@@ -13,7 +21,8 @@ unsigned int remotePort; unsigned int localPort = 8888;
 char packetBuffer[UDP_TX_PACKET_MAX_SIZE]; 
 char  ReplyBuffer[] = "acknowledged";
 int firstCommand = 0;
-Servo myservo; int lightsOff = 5; int lightsOn = 6;
+Servo myservo; int lightsOff = 5; int lightsOn = 6; int blindsState = 0;
+
 
 void setup() {
   Ethernet.begin(mac,ip);
@@ -32,20 +41,14 @@ void loop() {
     Udp.readPacket(packetBuffer,UDP_TX_PACKET_MAX_SIZE, remoteIp, remotePort);
     firstCommand = packetBuffer[0];
     
-    if(firstCommand == '0'){
-      //Silence is gold!
-    }
-    else if(firstCommand == '1'){
-       controlLight(packetBuffer[2]);
-    }
-    else if(firstCommand == '2'){
-      controlServo(packetBuffer[1]);
-    }
+    if(firstCommand == '0'){ /*Silence is gold!*/ }
+    else if(firstCommand == '1'){ controlLights(packetBuffer[1]); }
+    else if(firstCommand == '2'){ controlServo(packetBuffer[1]); }
   }
   delay(10);
 }
 void controlLights(char command){
-  if(command == '0'){
+  if(command == '0'){ 
     digitalWrite(lightsOff,HIGH);
     delay(600);
     digitalWrite(lightsOff,LOW);
@@ -53,9 +56,13 @@ void controlLights(char command){
     digitalWrite(lightsOn,HIGH);
     delay(600);
     digitalWrite(lightsOn,LOW);
+  }
 }
+
 void controlServo(char command){
-  if(command == '0'){myservo.write(80);}
-    else if(command == '1'){myservo.write(120);}
-    else if(command == '2'){myservo.write(40);}
+  int delta = command - blindsState; //if delta > 0 the blinds will go up
+  //Only able to run and stop the servo, have to implement a counter and find out how long it takes to raise the blinds 10%
+  if(command == '0'){ myservo.write(80); } //Stop
+  else if(command == '1'){ myservo.write(120); } //Clockwise
+  else if(command == '2'){ myservo.write(40); } //CounterClockwise
 }
