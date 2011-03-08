@@ -4,8 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.prefs.Preferences;
 
-import javax.swing.JOptionPane;
-
 public class SendUDP {
 	private DatagramSocket clientSocket;
 	private InetAddress IPAddress;

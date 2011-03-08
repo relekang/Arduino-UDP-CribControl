@@ -3,3 +3,9 @@ Author: Rolf Erik Lekang(me@rolflekang.com)
 Content:
  - Arduino Sketch
  - Java Control Applet
+
+The hardware setup:
+ - Arduino UNO
+ - Arduino Ethernet shield
+ - Remote for poweroutlets modified with transistors instead of buttons.
+ - Servo modified for full rotation.

@@ -1,7 +1,5 @@
 package ArduinoUDP;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
